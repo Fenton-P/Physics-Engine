@@ -2,10 +2,14 @@ package physics_engine;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Circle implements PhysicsObject {
-	private Vector position;
-	private double radius;
+	private Vector position, velocity;
+	private double radius, mass;
+	
+	private Set<Force> forces;
 	
 	public Circle() {
 		this(0, 0, 1);
@@ -13,7 +17,11 @@ public class Circle implements PhysicsObject {
 	
 	public Circle(double x, double y, double rad) {
 		position = new Vector(x, y);
+		velocity = new Vector(0, 0);
 		radius = rad;
+		mass = 1.;
+		
+		forces = new HashSet<>();
 	}
 
 	@Override
@@ -38,9 +46,8 @@ public class Circle implements PhysicsObject {
 	}
 
 	@Override
-	public Vector getVelocity(Vector v) {
-		// TODO Auto-generated method stub
-		return null;
+	public Vector getVelocity() {
+		return velocity;
 	}
 
 	@Override
@@ -57,20 +64,37 @@ public class Circle implements PhysicsObject {
 
 	@Override
 	public void applyForce(Vector v, double start, double finish) {
-		// TODO Auto-generated method stub
-		
+		applyForce(new Force(v, start, finish));
 	}
 
 	@Override
 	public void applyForce(Force f) {
-		// TODO Auto-generated method stub
-		
+		forces.add(f);
 	}
 
 	@Override
 	public ArrayList<Force> getForces() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void tick(double deltaT) {
+		position.add(velocity.getScaled(deltaT));
+		Set<Force> deadForces = new HashSet<>();
+		for(Force f : forces) {
+			velocity.add(f.getDeltaV(deltaT, mass));
+			position.add(f.getDeltaX(deltaT, mass));
+			f.tick(deltaT);
+			if(f.isDead()) deadForces.add(f);
+		}
+		forces.removeAll(deadForces);
+	}
+
+	@Override
+	public void getMass() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

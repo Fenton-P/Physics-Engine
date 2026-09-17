@@ -9,10 +9,12 @@ public interface PhysicsObject {
 	public void draw(Graphics2D paint);
 	
 	public void setVelocity(Vector v);
-	public Vector getVelocity(Vector v);
+	public Vector getVelocity();
 	public void setPosition(Vector v);
 	public Vector getPosition();
 	public void applyForce(Vector v, double start, double finish);
 	public void applyForce(Force f);
 	public ArrayList<Force> getForces();
+	public void tick(double deltaT);
+	public void getMass();
 }

@@ -15,5 +15,7 @@ public class MainWindow extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
+		
+		phys.beginSim();
 	}
 }

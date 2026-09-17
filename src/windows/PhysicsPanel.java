@@ -15,6 +15,10 @@ public class PhysicsPanel extends JPanel {
 	private final int X_SCALE = 16, Y_SCALE = 9;
 	private BufferedImage renderImage;
 	
+	private Thread graphicsLoop;
+	private int fps = 60;
+	private long delay = (long) (1./fps * 1000);
+	
 	public PhysicsPanel() {
 		this.setPreferredSize(new Dimension(800, 450));
 		
@@ -24,6 +28,12 @@ public class PhysicsPanel extends JPanel {
 		world.addObject(circle);
 		
 		renderImage = new BufferedImage(1600, 900, BufferedImage.TYPE_INT_ARGB);
+	}
+	
+	public void beginSim() {
+		world.start();
+		graphicsLoop = new Thread(this::update);
+		graphicsLoop.start();;
 	}
 	
 	@Override
@@ -51,5 +61,18 @@ public class PhysicsPanel extends JPanel {
 	
 	private void draw(Graphics2D paint) {
 		world.drawObjects(paint);
+	}
+	
+	private void update() {
+		while(graphicsLoop != null) {
+			SwingUtilities.invokeLater(this::repaint);
+			
+			try {
+				Thread.sleep(delay);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

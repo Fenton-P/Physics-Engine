@@ -38,7 +38,7 @@ public class PhysicsEngine {
 			long afterExecution = System.currentTimeMillis();
 			deltaTime = afterExecution - beforeExecution;
 			long delay = (long) (1000d / tickRate + .5 - deltaTime);
-			deltaTime /= 1000;
+			deltaTime = delay / 1000.;
 			delay = delay < 0 ? 0 : delay;
 			
 			try {
@@ -51,9 +51,16 @@ public class PhysicsEngine {
 	
 	public void addObject(PhysicsObject o) {
 		physicsObjects.add(o);
+		o.applyForce(new Vector(10, 0), 1, 10);
 	}
 	
 	private void tick() {
-		
+		applyForces();
+	}
+	
+	private void applyForces() {
+		for(PhysicsObject o : physicsObjects) {
+			o.tick(deltaTime);
+		}
 	}
 }
