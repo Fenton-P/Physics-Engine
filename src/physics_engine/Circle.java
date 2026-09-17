@@ -1,6 +1,7 @@
 package physics_engine;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 public class Circle implements PhysicsObject {
 	private Vector position;
@@ -28,6 +29,48 @@ public class Circle implements PhysicsObject {
 		int size = (int) (radius * 2);
 		
 		paint.fillOval(ovalX, ovalY, size, size);
+	}
+
+	@Override
+	public void setVelocity(Vector v) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Vector getVelocity(Vector v) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPosition(Vector v) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Vector getPosition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void applyForce(Vector v, double start, double finish) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void applyForce(Force f) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ArrayList<Force> getForces() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
