@@ -2,6 +2,7 @@ package windows;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
 
@@ -18,6 +19,8 @@ public class PhysicsPanel extends JPanel {
 	private Thread graphicsLoop;
 	private int fps = 60;
 	private long delay = (long) (1./fps * 1000);
+	@SuppressWarnings("unused")
+	private double deltaTime;
 	
 	public PhysicsPanel() {
 		this.setPreferredSize(new Dimension(800, 450));
@@ -39,15 +42,6 @@ public class PhysicsPanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		Graphics2D paint = (Graphics2D) renderImage.getGraphics();
-
-		paint.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		paint.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-		paint.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-		
-		paint.clearRect(0, 0, renderImage.getWidth(), renderImage.getHeight());
-		
-		draw(paint);
 		
 		int width = getWidth();
 		int height = getHeight();
@@ -65,14 +59,35 @@ public class PhysicsPanel extends JPanel {
 	
 	private void update() {
 		while(graphicsLoop != null) {
-			SwingUtilities.invokeLater(this::repaint);
-			
 			try {
-				Thread.sleep(delay);
+				long diff = render();
+				
+				SwingUtilities.invokeLater(this::repaint);
+				
+				long tempDelay = delay - diff;
+				deltaTime = diff / 1000.;
+				if(tempDelay < 0) tempDelay = 0;
+				Thread.sleep(tempDelay);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private long render() {
+		long before = System.currentTimeMillis();
+		
+		Graphics2D paint = (Graphics2D) renderImage.getGraphics();
+
+		paint.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		paint.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+		paint.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		
+		paint.clearRect(0, 0, renderImage.getWidth(), renderImage.getHeight());
+		
+		draw(paint);
+		
+		return System.currentTimeMillis() - before;
 	}
 }

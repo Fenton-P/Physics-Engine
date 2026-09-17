@@ -10,7 +10,7 @@ public class PhysicsEngine {
 	private Set<PhysicsObject> physicsObjects;
 	
 	public PhysicsEngine() {
-		this(20);
+		this(120);
 	}
 	
 	public PhysicsEngine(double tickRate) {
@@ -51,7 +51,7 @@ public class PhysicsEngine {
 	
 	public void addObject(PhysicsObject o) {
 		physicsObjects.add(o);
-		o.applyForce(new Vector(10, 0), 1, 10);
+		o.applyForce(new Vector(10, 0), 1, 5);
 	}
 	
 	private void tick() {
